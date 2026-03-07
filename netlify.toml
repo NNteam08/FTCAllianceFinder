@@ -1,0 +1,9 @@
+# FTC Alliance Finder — Netlify (Next.js via OpenNext)
+# https://docs.netlify.com/build/frameworks/framework-setup-guides/nextjs/overview/
+# Netlify auto-detects Next.js and configures build/publish via OpenNext.
+
+[build]
+  command = "npm run build"
+
+[build.environment]
+  NODE_VERSION = "20"
