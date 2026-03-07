@@ -16,7 +16,7 @@ import { useI18n } from "@/components/i18n/LanguageProvider";
 
 function CompareTeamsPageClient() {
   const searchParams = useSearchParams();
-  const { t } = useI18n();
+  const { t, lang } = useI18n();
   const initialTeams = searchParams.get("teams")?.split(",").map(Number).filter(Boolean) || [];
 
   const [teamNumbers, setTeamNumbers] = useState<number[]>(initialTeams);
@@ -113,6 +113,7 @@ function CompareTeamsPageClient() {
           },
           compatibilityScore: comp.score,
           factors: comp.compatibility.factors,
+          language: lang,
         }),
       });
       const data = await res.json();

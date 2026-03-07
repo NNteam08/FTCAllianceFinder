@@ -8,6 +8,8 @@ export interface AllianceAnalysisRequestBody {
   teamB: { number: number; OPR: number; avgAutonomous: number; avgEndgame: number; winRate: number; DPR?: number; CCWM?: number };
   compatibilityScore: number;
   factors: { autonomousSynergy: number; endgameSynergy: number; winRateComplement: number; offensiveComplement: number };
+  /** Язык ответа: "ru" | "en" — по выбранному в приложении */
+  language?: "ru" | "en";
 }
 
 /**
@@ -24,7 +26,8 @@ export async function POST(request: NextRequest) {
 
   try {
     const body = (await request.json()) as AllianceAnalysisRequestBody;
-    const { teamA, teamB, compatibilityScore, factors } = body;
+    const { teamA, teamB, compatibilityScore, factors, language } = body;
+    const lang = language === "en" ? "en" : "ru";
     if (!teamA || !teamB) {
       return NextResponse.json({ error: "Missing teamA or teamB" }, { status: 400 });
     }
@@ -41,7 +44,7 @@ Team ${teamB.number}: OPR=${teamB.OPR?.toFixed(1) ?? "?"}, автоном=${team
 
 Рассчитанный балл совместимости: ${compatibilityScore.toFixed(1)}% (по факторам: автоном=${factors?.autonomousSynergy ?? 0}, эндшпиль=${factors?.endgameSynergy ?? 0}, винрейт=${factors?.winRateComplement ?? 0}, OPR=${factors?.offensiveComplement ?? 0}).
 
-Дай краткий (2–4 предложения) анализ: стоит ли этим двум командам заключать альянс? Учти синергию, комплементарность и риски. Пиши по-русски.`;
+Дай краткий (2–4 предложения) анализ: стоит ли этим двум командам заключать альянс? Учти синергию, комплементарность и риски. Ответь строго на языке: ${lang === "en" ? "English only." : "только по-русски."}`;
 
     const completion = await openai.chat.completions.create({
       model: "gpt-4o-mini",
